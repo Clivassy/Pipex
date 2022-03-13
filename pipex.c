@@ -15,36 +15,54 @@ void    ft_init_struct(t_pipex *input, char **argv, char **envp)
     if (input->second_fd == -1)
             ft_error("error fd");
     input->env = envp;
-    input->cmd1= argv[2];
-    input->cmd2 = argv[3];
+}
+
+void    ft_child_one_process(t_pipex *input, char **argv)
+{
+    int p_id;
+
+    p_id = fork();
+    if (p_id == -1)
+        perror("error fork");
+    if (p_id == 0)
+    {
+        input->cmd1_arg = ft_split(argv[2], ' ');
+        //printf("%s\n", input->cmd1_arg[0]);
+        close(input->fd_pipe[0]);
+        //dup2(input->first_fd, 0);
+        //dup2(input->fd_pipe[1], 1);
+       // printf("%s\n", input->cmd1_arg[0]);
+       //printf("OK");
+        if (input->cmd1_arg[0] && ft_check_one_path(input, 1))
+        {
+            printf("OK");
+            execve(ft_check_one_path(input, 1), input->cmd1_arg, input->env);
+            ft_free(input->cmd1_arg);
+        }
+        else
+            perror("error");
+    }
 }
 
 int main(int argc, char **argv, char **envp)
 {
     t_pipex *input;
 
-    input = NULL;
     input = (t_pipex *)malloc(sizeof(t_pipex));
     if (argc != 5)
         return(ft_error("wrong input"));
     else 
     {
         if (pipe(input->fd_pipe) == -1)
-            ft_error("Something went wrong with pipe()");
-        //printf("input ok\n");
+            perror("Something went wrong with pipe()");
         ft_init_struct(input, argv, envp);
-        if (ft_check_one_path(input, 1))
-            printf("CHECK OK");
-        else
-            perror("error");
-        // get paths -> fct OK 
-       /*  ft_get_paths(input); 
-        int i = 0;
-        while (input->paths[i])
-        {
-            printf("Path %d\n%s\n", i, input->paths[i]);
-            i++;
-        } */
+        ft_child_one_process(input, argv);
+        // call child 2
+        // close fd_pipe[0]
+        // close fd_pipe[1]
+        // wait child 1
+        // wait child 2
+        //ft_free(input);
         return (0);
     }       
 }

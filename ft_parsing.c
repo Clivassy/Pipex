@@ -22,12 +22,10 @@ char    *ft_check_one_path(t_pipex *input, int index)
     char    *end_slash_path;
     int     i;
 
-    //printf("%s\n", input->cmd);
     if (index == 1)
-        input->cmd = input->cmd1;
+        input->cmd = input->cmd1_arg[0];
     if (index == 2)
-        input->cmd = input->cmd2;
-    //printf("%s\n", input->cmd);
+        input->cmd = input->cmd2_arg[0];
     if (ft_strnstr(input->cmd, "/", ft_strlen(input->cmd)))
         return (input->cmd);
     //printf("%s\n", input->cmd);
@@ -43,14 +41,14 @@ char    *ft_check_one_path(t_pipex *input, int index)
         //get one path : on ajoute le / de fin
         end_slash_path = ft_strjoin(input->paths[i], "/");
         //printf("%s\n", end_slash_path);
-        printf("%s\n", input->cmd);
+        //printf("%s\n", input->cmd);
         // joindre le path avec la commande
         path = ft_strjoin(end_slash_path, input->cmd); // ATTENTION AU STR_JOIN 
         //free (end_slash_path); // on ne va plus l'utiliser
         // car on va utiliser le path avec cmd
         // et on veut reutiliser la  variable vide 
         // en boucle, jusqu'a !input->path
-       // printf("%s\n", path);
+        printf("%s\n", path);
         if (!access (path, F_OK)) // F_OK == existence test
         // on check si le path existe
         {
