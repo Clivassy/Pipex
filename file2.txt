@@ -1,0 +1,13 @@
+Makefile
+a.out
+draft.c
+file1.txt
+file2.txt
+ft_parsing.c
+ft_strjoin.c
+ft_strlen.c
+ft_strnstr.c
+ft_utils.c
+libft.c
+pipex.c
+pipex.h
