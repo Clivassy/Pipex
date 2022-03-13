@@ -1,3 +1,11 @@
+# include <stdio.h>
+# include <time.h>
+# include <fcntl.h>
+# include <sys/wait.h>
+# include <unistd.h>
+# include <stdlib.h>
+# include <string.h>
+
 /* 
 --------------
 General idea  
@@ -17,12 +25,9 @@ dup2 -> to swap our files with stdin ans stdout
 
 */
 
-#include "pipex.h"
-
 /* int main(int ac, char **av)
 {
-    (void)ac;
-    (void)av;
+    
     int fd[2];
     //fd[0] = read 
     //fd[1] = write
@@ -142,7 +147,7 @@ dup2 -> to swap our files with stdin ans stdout
 // fonction qui va parser l'input 
 
 
-void    pipex(int f1, int f2)
+/*void    pipex(int f1, int f2)
 {
     int end[2];
     int parent;
@@ -171,11 +176,70 @@ int main(int argc, char **argv, char **env)
     // -> 4 arg / a.out
     if (argc != 5)
         return (0); // créer une fonction pour les erreurs. 
-   /*  while (*env)
+     while (*env)
     {
         printf("%s\n", *env);
         env++;
-    } */  
+    } 
     
     return (0);
-} 
+} */
+/* 
+void    ft_child_one_process(t_pipex *input, char **argv)
+{
+
+    input->fd_status = fork();
+    if (input->fd_status == -1)
+        ft_error("error fork");
+    if (input->fd_status == 0)
+    {
+        input->fd[0] = open(argv[1], O_RDONLY);
+        if (input->fd[0] == -1)
+            ft_error("error fd");
+        input->cmd1_arg = ft_split(argv[2], ' ');
+        //printf("%s\n", input->cmd1_arg[0]);
+        dup2(input->fd[0], 0);
+        //printf("%d\n", input->fd_status);
+        dup2(input->fd_pipe[1], 1);
+        close(input->fd_pipe[1]);
+        close(input->fd_pipe[0]);
+        printf("%d\n", input->fd_status);
+        if (input->cmd1_arg[0] && ft_check_one_path(input))
+        {
+            execve(ft_check_one_path(input), &input->cmd1_arg[0], input->env);
+            ft_free(&input->cmd1_arg[0]);
+        }
+        else
+            ft_error("Command not found\n");
+
+    }
+}
+
+
+void    ft_child_two_process(t_pipex *input, char **argv)
+{
+    input->fd_status = fork();
+    if (input->fd_status == -1)
+        ft_error("error fork");
+    if (input->fd_status == 0)
+    {
+        input->fd[1] = open(argv[4], O_WRONLY | O_CREAT | O_TRUNC, 0666);
+        if (input->fd[0] == -1)
+            ft_error("error fd");
+        input->cmd2_arg = ft_split(argv[3], ' ');
+        dup2(input->fd[1], 1);
+        dup2(input->fd_pipe[0], 0);
+        close(input->fd_pipe[0]);
+        printf("%d\n", input->fd_status);
+        if (input->cmd2_arg[0] && ft_check_one_path(input))
+        {
+            execve(ft_check_one_path(input), &input->cmd2_arg[0], input->env);
+            ft_free(&input->cmd2_arg[0]);
+        }
+        else
+            ft_error("Command not found\n");
+
+    }
+} */
+
+int

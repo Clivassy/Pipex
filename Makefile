@@ -1,4 +1,4 @@
-SRCS	= pipex.c utils.c
+SRCS	= pipex.c ft_utils.c libft.c ft_parsing.c
 
 OBJS	= ${SRCS:.c=.o}
 
