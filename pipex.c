@@ -8,7 +8,7 @@ int ft_error(char *str)
 
 void    ft_init_struct(t_pipex *input, char **argv, char **envp)
 {
-    input-> first_fd = open(argv[1], O_RDONLY);
+    input->first_fd = open(argv[1], O_RDONLY);
     if (input->first_fd == -1)
             ft_error("error fd");
     input->second_fd = open(argv[4], O_WRONLY | O_CREAT | O_TRUNC, 0666);
@@ -24,11 +24,11 @@ int main(int argc, char **argv, char **envp)
     t_pipex *input;
 
     input = NULL;
+    input = (t_pipex *)malloc(sizeof(t_pipex));
     if (argc != 5)
         return(ft_error("wrong input"));
     else 
     {
-        input = malloc(sizeof(t_pipex*));
         if (pipe(input->fd_pipe) == -1)
             ft_error("Something went wrong with pipe()");
         //printf("input ok\n");
