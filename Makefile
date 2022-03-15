@@ -1,32 +1,24 @@
-SRCS	= pipex.c ft_utils.c libft.c ft_parsing.c
+NAME = pipex
 
-OBJS	= ${SRCS:.c=.o}
+SRCS = pipex.c ft_utils.c ft_split.c ft_parsing.c ft_strjoin.c
 
-CC	= gcc
+OBJS = ${SRCS:.c=.o}
 
-NAME	= pipex.a
+CC = gcc
+CFLAGS = -Wall -Wextra -Werror
 
-CFLAGS	= -Wall -Werror -Wextra 
+RM = rm -rf
 
-RM	= rm -f
+all: ${NAME} pipex.h
+${NAME}: ${OBJS}
+	@${CC} ${CFLAGS} ${OBJS} -o pipex
 
-%.o : 	%.c
-	@echo "\033[0;31mCompiling..."
-	@${CC} -o $@ -c $< ${CFLAGS}
-	
-all : ${NAME}
+clean: 
+	@${RM} ${OBJS}
 
-$(NAME) : ${OBJS} pipex.h
-	@echo "\033[0;33mLinking..."
-	@ar rcs ${NAME} ${OBJS}
-	@echo "\033[0;32mOK!"
+fclean: clean
+	@${RM} ${NAME}
 
-clean :
-	@echo "\033[0;33mCleaning..."
-	@${RM} ${OBJS} ${OBJS_B}
-	@echo "\033[0;32mOK CLEAN!"
+re: fclean all
 
-fclean : clean
-	${RM} ${NAME}
-
-re : fclean all
+.PHONY: all clean fclean re
