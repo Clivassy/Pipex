@@ -33,6 +33,9 @@ char    *ft_check_one_path(t_pipex *input, int index);
 void	ft_free(char **args);
 size_t	ft_strlen(const char *s);
 
+/*Errors*/
+void ft_input_error();
+
 /* Pipex */
 
 #endif

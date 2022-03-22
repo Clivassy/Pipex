@@ -241,5 +241,3 @@ void    ft_child_two_process(t_pipex *input, char **argv)
 
     }
 } */
-
-int

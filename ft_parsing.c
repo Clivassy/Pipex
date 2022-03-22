@@ -1,5 +1,6 @@
 #include "pipex.h"
 
+/* Get PATHS*/
 void    ft_get_paths(t_pipex *input)
 {
     int     i;
@@ -10,16 +11,23 @@ void    ft_get_paths(t_pipex *input)
     input->paths = ft_split(input->env[i] + 5, ':');
 }
 
+/* Init the cmd given the input*/
+void    ft_check_cmd(t_pipex *input, int index)
+{
+    if (index == 1)
+        input->cmd = input->cmd1_arg[0];
+    if (index == 2)
+        input->cmd = input->cmd2_arg[0];
+}
+
+/* Check all paths*/
 char    *ft_check_one_path(t_pipex *input, int index)
 {
     char    *path;
     char    *end_slash_path;
     int     i;
 
-    if (index == 1)
-        input->cmd = input->cmd1_arg[0];
-    if (index == 2)
-        input->cmd = input->cmd2_arg[0];
+    ft_check_cmd(input, index);    
     if (ft_strnstr(input->cmd, "/", ft_strlen(input->cmd)))
         return (input->cmd);
     ft_get_paths(input);
