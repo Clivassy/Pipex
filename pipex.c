@@ -1,17 +1,13 @@
 #include "pipex.h"
 
-void ft_input_error()
-{
-    write(2,"Error Input\n./pipex [file1][cmd1][cmd2][file2]", 47);
-    exit(EXIT_FAILURE);
-}
-
 void    ft_init_struct(t_pipex *input, char **argv, char **envp)
 {
     input->first_fd = open(argv[1], O_RDONLY);
     if (input->first_fd == -1)
             perror("error fd");
-    input->second_fd = open(argv[4], O_WRONLY | O_TRUNC | O_CREAT, 0666); // can read or write but not exec
+    input->second_fd = open(argv[4], O_WRONLY | O_TRUNC | O_CREAT, 0666); 
+    // 0777 : all rights are given
+    // can read or write but not exec
     if (input->second_fd == -1)
             perror("error fd");
     input->env = envp;
@@ -60,7 +56,7 @@ void    ft_child2_process(t_pipex *input, char **argv)
         {
             execve(ft_check_one_path(input, 2), input->cmd2_arg, input->env);
             ft_free(input->cmd2_arg);
-        }
+        } 
         else
             perror("cmd not found : error");
     }
@@ -82,7 +78,7 @@ int main(int argc, char **argv, char **envp)
         ft_child2_process(input, argv);
         close(input->fd_pipe[0]);
         close(input->fd_pipe[1]);
-        // -1 == Wait for any child process.
+        // use waitpid bc we want first child1 to execute and then child2
         waitpid(input->fd_pipe[0], &input->status, 0);
         waitpid(input->fd_pipe[1], &input->status, 0);
         free(input);
