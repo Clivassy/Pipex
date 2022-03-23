@@ -1,5 +1,22 @@
 #include "pipex.h"
 
+void ft_input_error()
+{
+    write(2,"Error Input\n./pipex [file1][cmd1][cmd2][file2]", 47);
+    exit(EXIT_FAILURE);
+}
+
+void	ft_exit()
+{
+
+	write(2, "Error\n", 1)
+}
+
+void	ft_cmd_error()
+{
+
+}
+
 size_t	ft_strlen(const char *s)
 {
 	size_t	i;
@@ -47,3 +64,4 @@ char	*ft_strnstr(const char *big, const char *little, size_t len)
 	}
 	return (0);
 }
+
