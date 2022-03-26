@@ -5,7 +5,7 @@ void    ft_init_struct(t_pipex *input, char **argv, char **envp)
     input->first_fd = open(argv[1], O_RDONLY);
     if (input->first_fd == -1)
             perror("error fd");
-    input->second_fd = open(argv[4], O_WRONLY | O_TRUNC | O_CREAT, 0666); 
+    input->second_fd = open(argv[4], O_WRONLY | O_TRUNC | O_CREAT, 0777); 
     // 0777 : all rights are given
     // can read or write but not exec
     if (input->second_fd == -1)
@@ -22,12 +22,13 @@ void    ft_child1_process(t_pipex *input, char **argv)
         perror("ERROR : Forking child process failed\n");
     if (p_id1 == 0)
     {
+        input->cmd1_arg = ft_split(argv[2], ' ');
         close(input->fd_pipe[0]); // we don't use it
         //I want to write cmd1 result to fd_pipe[1]
+        dup2(input->first_fd, 0);
         dup2(input->fd_pipe[1], 1); // duplicate & redirect to stdout
         // bc cmd1 output becomes stdoud de cmd1
         close(input->fd_pipe[1]); // still open but we have our duplicate. don't need anymore. 
-        input->cmd1_arg = ft_split(argv[2], ' ');
         if (input->cmd1_arg[0] && ft_check_one_path(input, 1))
         {
             //lorsque cette cmd va s'executer, l'output va etre ecrit dans pipe_fd[1]
@@ -35,7 +36,7 @@ void    ft_child1_process(t_pipex *input, char **argv)
             ft_free(input->cmd1_arg);
         }
         else
-            perror("cmd not found : error");
+            cmd_not_found(input->cmd1_arg);
             // CHANGER ERREUR 
             // error specifique a la commande qui n a pas ete trouvee ou mal executee 
     }
@@ -49,16 +50,14 @@ void    ft_child2_process(t_pipex *input, char **argv)
     if (p_id2 == -1)
         perror("ERROR : Forking child process failed\n");
     if (p_id2 == 0)
-    {   
-        //printf("%d\n",input->fd_pipe[0]);
-        //printf("%d\n",input->second_fd);
-        close(input->fd_pipe[1]); // don't use it. 
+    {    
+        input->cmd2_arg = ft_split(argv[3], ' ');
         dup2(input->second_fd, 1); // duplicate file & redirect to stdout
         // Faire en sorte que le file en arg4 soit la nouvelle sortie
+        close(input->fd_pipe[1]); // don't use it.
         dup2(input->fd_pipe[0], 0); // duplicate & redirect to stdin
         // Faire en sorte que l'entree soit pipe_fd[0] SOIT le result de cmd1
-        close(input->fd_pipe[0]);
-        input->cmd2_arg = ft_split(argv[3], ' ');
+        //close(input->fd_pipe[0]);
         if (input->cmd2_arg[0] && ft_check_one_path(input, 2))
         {
             // lorsqu'on execute cette cmd ; l'output va etre ecrit dans argv4
@@ -66,7 +65,7 @@ void    ft_child2_process(t_pipex *input, char **argv)
             ft_free(input->cmd2_arg);
         } 
         else
-            perror("cmd not found : error");
+            cmd_not_found(input->cmd2_arg);
             // CHANGER ERREUR 
             // error specifique a la commande qui n a pas ete trouvee ou mal executee 
     }
@@ -88,12 +87,6 @@ int main(int argc, char **argv, char **envp)
         ft_child2_process(input, argv);
         close(input->fd_pipe[0]);
         close(input->fd_pipe[1]);
-<<<<<<< HEAD
-=======
-        // use waitpid bc we want first child1 to execute and then child2
->>>>>>> 9361d78e5786f2f0b44732c8c620e5aaf7bb4a49
-        waitpid(input->fd_pipe[0], &input->status, 0);
-        waitpid(input->fd_pipe[1], &input->status, 0);
         free(input);
         return (0);
     }       
@@ -102,4 +95,9 @@ int main(int argc, char **argv, char **envp)
 /* WHY CLOSE FD ?
 - it free all heap memory 
 - Otherwise I would have some leaks using valgrind 
+*/
+/*
+modifier les outputs en cas de cmd not found : 
+./pipex file1.txt "notexisting" "wc" file2.txt
+notexisting: command not found
 */
