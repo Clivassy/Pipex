@@ -37,8 +37,6 @@ void    ft_child1_process(t_pipex *input, char **argv)
         }
         else
             cmd_not_found(input->cmd1_arg);
-            // CHANGER ERREUR 
-            // error specifique a la commande qui n a pas ete trouvee ou mal executee 
     }
 }
 
@@ -66,8 +64,6 @@ void    ft_child2_process(t_pipex *input, char **argv)
         } 
         else
             cmd_not_found(input->cmd2_arg);
-            // CHANGER ERREUR 
-            // error specifique a la commande qui n a pas ete trouvee ou mal executee 
     }
 }
 
@@ -77,7 +73,7 @@ int main(int argc, char **argv, char **envp)
 
     input = (t_pipex *)malloc(sizeof(t_pipex));
     if (argc != 5)
-        ft_input_error();
+        ft_input_error(input);
     else 
     {
         if (pipe(input->fd_pipe) == -1)
@@ -87,6 +83,8 @@ int main(int argc, char **argv, char **envp)
         ft_child2_process(input, argv);
         close(input->fd_pipe[0]);
         close(input->fd_pipe[1]);
+        waitpid(-1, &input->first_fd, 0);
+        waitpid(-1, &input->second_fd, 0);
         free(input);
         return (0);
     }       

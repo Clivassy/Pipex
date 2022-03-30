@@ -35,7 +35,7 @@ size_t	ft_strlen(const char *s);
 
 /*Errors*/
 void	cmd_not_found(char **cmd);
-void ft_input_error();
+void ft_input_error(t_pipex *input);
 int	msg(char *err);
 
 /* Pipex */
