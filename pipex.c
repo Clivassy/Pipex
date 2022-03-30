@@ -36,7 +36,7 @@ void    ft_child1_process(t_pipex *input, char **argv)
             ft_free(input->cmd1_arg);
         }
         else
-            cmd_not_found(input->cmd1_arg);
+            cmd_not_found(input->cmd1_arg, input);
     }
 }
 
@@ -63,7 +63,7 @@ void    ft_child2_process(t_pipex *input, char **argv)
             ft_free(input->cmd2_arg);
         } 
         else
-            cmd_not_found(input->cmd2_arg);
+            cmd_not_found(input->cmd2_arg, input);
     }
 }
 

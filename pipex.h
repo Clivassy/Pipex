@@ -34,7 +34,7 @@ void	ft_free(char **args);
 size_t	ft_strlen(const char *s);
 
 /*Errors*/
-void	cmd_not_found(char **cmd);
+void	cmd_not_found(char **cmd, t_pipex *input);
 void ft_input_error(t_pipex *input);
 int	msg(char *err);
 

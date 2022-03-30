@@ -7,10 +7,11 @@ void ft_input_error(t_pipex *input)
 	exit(EXIT_FAILURE);
 }
 
-void	cmd_not_found(char **cmd)
+void	cmd_not_found(char **cmd, t_pipex *input)
 {
 	write(2, cmd[0], ft_strlen(cmd[0]));
 	write(2, ": command not found\n", 20);
 	ft_free(cmd);
+	free(input);
 	exit(EXIT_FAILURE);
 }
