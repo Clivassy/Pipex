@@ -9,11 +9,9 @@ void    ft_init_struct(t_pipex *input, char **argv, char **envp)
     if (input->second_fd == -1)
             perror("error fd");
     input->env = envp;
-    input->cmd1_arg = ft_split(argv[2], ' ');
-    input->cmd2_arg = ft_split(argv[3], ' ');
 }
 
-void    ft_child1_process(t_pipex *input)
+void    ft_child1_process(t_pipex *input, char **argv)
 {
     int p_id1;
 
@@ -22,6 +20,7 @@ void    ft_child1_process(t_pipex *input)
         perror("ERROR : Forking child process failed\n");
     if (p_id1 == 0)
     {
+        input->cmd1_arg = ft_split(argv[2], ' ');
         close(input->fd_pipe[0]); // we don't use it
         //I want to write cmd1 result to fd_pipe[1]
         dup2(input->first_fd, 0);
@@ -39,7 +38,7 @@ void    ft_child1_process(t_pipex *input)
     }
 }
 
-void    ft_child2_process(t_pipex *input)
+void    ft_child2_process(t_pipex *input, char **argv)
 {
     int p_id2;
     
@@ -48,6 +47,7 @@ void    ft_child2_process(t_pipex *input)
         perror("ERROR : Forking child process failed\n");
     if (p_id2 == 0)
     {    
+        input->cmd2_arg = ft_split(argv[3], ' ');
         dup2(input->second_fd, 1); // duplicate file & redirect to stdout
         // Faire en sorte que le file en arg4 soit la nouvelle sortie
         close(input->fd_pipe[1]); // don't use it.
@@ -77,8 +77,8 @@ int main(int argc, char **argv, char **envp)
         if (pipe(input->fd_pipe) == -1)
             perror("ERROR : Something went wrong with pipe()\n");
         ft_init_struct(input, argv, envp);
-        ft_child1_process(input);
-        ft_child2_process(input);
+        ft_child1_process(input, argv);
+        ft_child2_process(input, argv);
         close(input->fd_pipe[0]);
         close(input->fd_pipe[1]);
         waitpid(-1, &input->first_fd, 0);
