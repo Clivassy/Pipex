@@ -6,14 +6,14 @@ void    ft_init_struct(t_pipex *input, char **argv, char **envp)
     if (input->first_fd == -1)
             perror("error fd");
     input->second_fd = open(argv[4], O_WRONLY | O_TRUNC | O_CREAT, 0777); 
-    // 0777 : all rights are given
-    // can read or write but not exec
     if (input->second_fd == -1)
             perror("error fd");
     input->env = envp;
+    input->cmd1_arg = ft_split(argv[2], ' ');
+    input->cmd2_arg = ft_split(argv[3], ' ');
 }
 
-void    ft_child1_process(t_pipex *input, char **argv)
+void    ft_child1_process(t_pipex *input)
 {
     int p_id1;
 
@@ -22,13 +22,12 @@ void    ft_child1_process(t_pipex *input, char **argv)
         perror("ERROR : Forking child process failed\n");
     if (p_id1 == 0)
     {
-        input->cmd1_arg = ft_split(argv[2], ' ');
         close(input->fd_pipe[0]); // we don't use it
         //I want to write cmd1 result to fd_pipe[1]
         dup2(input->first_fd, 0);
         dup2(input->fd_pipe[1], 1); // duplicate & redirect to stdout
         // bc cmd1 output becomes stdoud de cmd1
-        close(input->fd_pipe[1]); // still open but we have our duplicate. don't need anymore. 
+        //close(input->fd_pipe[1]); // still open but we have our duplicate. don't need anymore. 
         if (input->cmd1_arg[0] && ft_check_one_path(input, 1))
         {
             //lorsque cette cmd va s'executer, l'output va etre ecrit dans pipe_fd[1]
@@ -40,7 +39,7 @@ void    ft_child1_process(t_pipex *input, char **argv)
     }
 }
 
-void    ft_child2_process(t_pipex *input, char **argv)
+void    ft_child2_process(t_pipex *input)
 {
     int p_id2;
     
@@ -49,7 +48,6 @@ void    ft_child2_process(t_pipex *input, char **argv)
         perror("ERROR : Forking child process failed\n");
     if (p_id2 == 0)
     {    
-        input->cmd2_arg = ft_split(argv[3], ' ');
         dup2(input->second_fd, 1); // duplicate file & redirect to stdout
         // Faire en sorte que le file en arg4 soit la nouvelle sortie
         close(input->fd_pipe[1]); // don't use it.
@@ -79,8 +77,8 @@ int main(int argc, char **argv, char **envp)
         if (pipe(input->fd_pipe) == -1)
             perror("ERROR : Something went wrong with pipe()\n");
         ft_init_struct(input, argv, envp);
-        ft_child1_process(input, argv);
-        ft_child2_process(input, argv);
+        ft_child1_process(input);
+        ft_child2_process(input);
         close(input->fd_pipe[0]);
         close(input->fd_pipe[1]);
         waitpid(-1, &input->first_fd, 0);
@@ -89,13 +87,3 @@ int main(int argc, char **argv, char **envp)
         return (0);
     }       
 }
-
-/* WHY CLOSE FD ?
-- it free all heap memory 
-- Otherwise I would have some leaks using valgrind 
-*/
-/*
-modifier les outputs en cas de cmd not found : 
-./pipex file1.txt "notexisting" "wc" file2.txt
-notexisting: command not found
-*/

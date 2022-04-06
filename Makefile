@@ -4,7 +4,7 @@ SRCS = pipex.c ft_utils.c ft_split.c ft_parsing.c ft_strjoin.c ft_errors.c
 
 OBJS = ${SRCS:.c=.o}
 
-CC = gcc
+CC = cc
 CFLAGS = -Wall -Wextra -Werror
 
 RM = rm -rf
