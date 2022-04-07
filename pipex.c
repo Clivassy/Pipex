@@ -34,7 +34,6 @@ void	ft_child1_process(t_pipex *input, char **argv)
 		close(input->fd_pipe[0]);
 		dup2(input->first_fd, 0);
 		dup2(input->fd_pipe[1], 1);
-		close(input->fd_pipe[1]);
 		input->cmd1_arg = ft_split(argv[2], ' ');
 		if (input->cmd1_arg[0] && ft_check_one_path(input, 1))
 		{
@@ -58,7 +57,6 @@ void	ft_child2_process(t_pipex *input, char **argv)
 		dup2(input->second_fd, 1);
 		close(input->fd_pipe[1]);
 		dup2(input->fd_pipe[0], 0);
-		close(input->fd_pipe[0]);
 		input->cmd2_arg = ft_split(argv[3], ' ');
 		if (input->cmd2_arg[0] && ft_check_one_path(input, 2))
 		{
@@ -84,8 +82,10 @@ int	main(int argc, char **argv, char **envp)
 		ft_init_struct(input, argv, envp);
 		ft_child1_process(input, argv);
 		ft_child2_process(input, argv);
-		//waitpid(-1, &input->first_fd, 0);
-		//waitpid(-1, &input->second_fd, 0);
+		close(input->fd_pipe[0]);
+		close(input->fd_pipe[1]);
+		waitpid(-1, &input->first_fd, 0);
+		waitpid(-1, &input->second_fd, 0);
 		close(input->first_fd);
 		close(input->second_fd);
 		free(input);
