@@ -84,12 +84,10 @@ int	main(int argc, char **argv, char **envp)
 		ft_init_struct(input, argv, envp);
 		ft_child1_process(input, argv);
 		ft_child2_process(input, argv);
-		close(input->fd_pipe[0]);
-		close(input->fd_pipe[1]);
-		waitpid(-1, &input->first_fd, 0);
-		waitpid(-1, &input->second_fd, 0);
 		close(input->first_fd);
 		close(input->second_fd);
+		waitpid(-1, &input->first_fd, 0);
+		waitpid(-1, &input->second_fd, 0);
 		free(input);
 		return (0);
 	}
