@@ -56,16 +56,10 @@ void	ft_child2_process(t_pipex *input, char **argv)
 		ft_cmd_error(input->cmd2_arg, input);
 }
 
-void	ft_close_fds(t_pipex *input)
-{
-	close(input->first_fd);
-	close(input->second_fd);
-}
-
 int	main(int argc, char **argv, char **envp)
 {
 	t_pipex	*input;
-
+	
 	input = (t_pipex *)malloc(sizeof(t_pipex));
 	if (argc != 5)
 		ft_input_error(input);
@@ -73,13 +67,16 @@ int	main(int argc, char **argv, char **envp)
 		ft_error(input);
 	ft_init_struct(input, argv, envp);
 	input->pid_1 = fork();
+	if (input->pid_1 == -1)
+		ft_error(input);
 	if (input->pid_1 == 0)
 		ft_child1_process(input, argv);
 	input->pid_2 = fork();
+	if (input->pid_2 == -1)
+		ft_error(input);
 	if (input->pid_2 == 0)
 		ft_child2_process(input, argv);
-	close(input->fd_pipe[0]);
-	close(input->fd_pipe[1]);
+	ft_close_pipes(input);
 	waitpid(-1, &input->first_fd, 0);
 	waitpid(-1, &input->second_fd, 0);
 	ft_close_fds(input);

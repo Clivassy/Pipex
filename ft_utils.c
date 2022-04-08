@@ -11,6 +11,18 @@
 /* ************************************************************************** */
 #include "pipex.h"
 
+void	ft_close_fds(t_pipex *input)
+{
+	close(input->first_fd);
+	close(input->second_fd);
+}
+
+void ft_close_pipes(t_pipex *input)
+{
+	close(input->fd_pipe[0]);
+	close(input->fd_pipe[1]);
+}
+
 size_t	ft_strlen(const char *s)
 {
 	size_t	i;
