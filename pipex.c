@@ -62,11 +62,6 @@ void	ft_close_fds(t_pipex *input)
 	close(input->second_fd);
 }
 
-void 	ft_close_pipe(t_pipex *input)
-{
-	close(input->fd_pipe[0]);
-	close(input->fd_pipe[1]);
-}
 int	main(int argc, char **argv, char **envp)
 {
 	t_pipex	*input;
@@ -83,7 +78,8 @@ int	main(int argc, char **argv, char **envp)
 	input->pid_2 = fork();
 	if (input->pid_2 == 0)
 		ft_child2_process(input, argv);
-	ft_close_pipe(input);
+	close(input->fd_pipe[0]);
+	close(input->fd_pipe[1]);
 	waitpid(-1, &input->first_fd, 0);
 	waitpid(-1, &input->second_fd, 0);
 	ft_close_fds(input);
