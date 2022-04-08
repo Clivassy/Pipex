@@ -11,7 +11,7 @@
 /* ************************************************************************** */
 #include "pipex.h"
 
-void	ft_init_struct(t_pipex *input, char **argv, char **envp)
+/* void	ft_init_struct(t_pipex *input, char **argv, char **envp)
 {
 	input->first_fd = open(argv[1], O_RDONLY);
 	if (input->first_fd == -1)
@@ -20,7 +20,7 @@ void	ft_init_struct(t_pipex *input, char **argv, char **envp)
 	if (input->second_fd == -1)
 		ft_error(input);
 	input->env = envp;
-}
+} */
 
 void	ft_child1_process(t_pipex *input, char **argv)
 {
@@ -95,7 +95,14 @@ int	main(int argc, char **argv, char **envp)
 	{
 		if (pipe(input->fd_pipe) == -1)
 			ft_error(input);
-		ft_init_struct(input, argv, envp);
+		//ft_init_struct(input, argv, envp);
+		input->first_fd = open(argv[1], O_RDONLY);
+		if (input->first_fd == -1)
+			ft_error(input);
+		input->second_fd = open(argv[4], O_WRONLY | O_TRUNC | O_CREAT, 0644);
+		if (input->second_fd == -1)
+			ft_error(input);
+		input->env = envp;
 		ft_child1_process(input, argv);
 		ft_child2_process(input, argv);
 		close(input->fd_pipe[0]);
