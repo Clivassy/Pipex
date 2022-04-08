@@ -19,10 +19,10 @@ void	ft_input_error(t_pipex *input)
 	exit(EXIT_FAILURE);
 }
 
-/*Error with fd */
-void	ft_fd_error(t_pipex *input)
+/*Error with fd or dup or pipe*/
+void	ft_error(t_pipex *input)
 {
-	perror("error fd");
+	perror("Error\n");
 	free(input);
 	exit(EXIT_FAILURE);
 }

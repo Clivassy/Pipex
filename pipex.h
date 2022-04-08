@@ -46,6 +46,6 @@ size_t	ft_strlen(const char *s);
 
 /*Errors*/
 void	ft_cmd_error(char **cmd, t_pipex *input);
-void	ft_fd_error(t_pipex *input);
+void	ft_error(t_pipex *input);
 void	ft_input_error(t_pipex *input);
 #endif
