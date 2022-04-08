@@ -88,7 +88,7 @@ int	main(int argc, char **argv, char **envp)
 {
 	t_pipex	*input;
 
-	input = malloc(sizeof(t_pipex*));
+	input = (t_pipex *)malloc(sizeof(t_pipex));
 	if (argc != 5)
 		ft_input_error(input);
 	else
