@@ -24,12 +24,11 @@ void	ft_init_struct(t_pipex *input, char **argv, char **envp)
 
 void	ft_child1_process(t_pipex *input, char **argv)
 {
+	if (dup2(input->fd_pipe[1], 1) == -1)
+		ft_error(input);
 	close(input->fd_pipe[0]);
 	if (dup2(input->first_fd, 0) == -1)
 		ft_error(input);
-	if (dup2(input->fd_pipe[1], 1) == -1)
-		ft_error(input);
-	close(input->first_fd);
 	input->cmd1_arg = ft_split(argv[2], ' ');
 	if (input->cmd1_arg[0] && ft_check_one_path(input, 1))
 	{
@@ -42,12 +41,11 @@ void	ft_child1_process(t_pipex *input, char **argv)
 
 void	ft_child2_process(t_pipex *input, char **argv)
 {
-	close(input->fd_pipe[1]);
 	if (dup2(input->fd_pipe[0], 0) == -1)
 		ft_error(input);
+	close(input->fd_pipe[1]);
 	if (dup2(input->second_fd, 1) == -1)
 		ft_error(input);
-	close(input->second_fd);
 	input->cmd2_arg = ft_split(argv[3], ' ');
 	if (input->cmd2_arg[0] && ft_check_one_path(input, 2))
 	{
@@ -64,6 +62,11 @@ void	ft_close_fds(t_pipex *input)
 	close(input->second_fd);
 }
 
+void 	ft_close_pipe(t_pipex *input)
+{
+	close(input->fd_pipe[0]);
+	close(input->fd_pipe[1]);
+}
 int	main(int argc, char **argv, char **envp)
 {
 	t_pipex	*input;
@@ -80,8 +83,7 @@ int	main(int argc, char **argv, char **envp)
 	input->pid_2 = fork();
 	if (input->pid_2 == 0)
 		ft_child2_process(input, argv);
-	close(input->fd_pipe[0]);
-	close(input->fd_pipe[1]);
+	ft_close_pipe(input);
 	waitpid(-1, &input->first_fd, 0);
 	waitpid(-1, &input->second_fd, 0);
 	ft_close_fds(input);
