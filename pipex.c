@@ -11,14 +11,53 @@
 /* ************************************************************************** */
 #include "pipex.h"
 
+
+void	ft_putendl_fd(char *s, int fd)
+{
+	int	i;
+
+	i = 0;
+	if (!s)
+		return ;
+	while (s[i])
+	{
+		write(fd, &s[i], 1);
+		i++;
+	}
+	write(fd, "\n", 1);
+}
+
+void	ft_putstr_fd(char *s, int fd)
+{
+	int		i;
+
+	i = 0;
+	if (!s)
+		return ;
+	while (s[i])
+	{
+		write (fd, &s[i], 1);
+		i++;
+	}
+}
+
+void	ft_fd_error(char *file, char *error)
+{
+	ft_putstr_fd("pipex: ", 2);
+	ft_putstr_fd(file, 2);
+	ft_putstr_fd(": ", 2);
+	ft_putendl_fd(error, 2);
+	exit(EXIT_FAILURE);
+}
+
 void	ft_init_struct(t_pipex *input, char **argv, char **envp)
 {
 	input->first_fd = open(argv[1], O_RDONLY);
 	if (input->first_fd == -1)
-		ft_error(input);
+		error(argv[1], strerror(errno));
 	input->second_fd = open(argv[4], O_WRONLY | O_TRUNC | O_CREAT, 0644);
 	if (input->second_fd == -1)
-		ft_error(input);
+		//ft_error(input);
 	input->env = envp;
 }
 
