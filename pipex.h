@@ -26,6 +26,8 @@ typedef struct s_pipex
 	int		fd_pipe[2];
 	int		first_fd;
 	int		second_fd;
+	int		pid_1;
+	int 	pid_2;
 	char	*cmd;
 	char	**cmd1_arg;
 	char	**cmd2_arg;

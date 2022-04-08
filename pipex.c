@@ -24,16 +24,11 @@ void	ft_init_struct(t_pipex *input, char **argv, char **envp)
 
 void	ft_child1_process(t_pipex *input, char **argv)
 {
-	int	p_id1;
-
-	p_id1 = fork();
-	if (p_id1 == -1)
+/* 	if (p_id1 == -1)
 	{
 		free(input);
 		perror("ERROR : Forking child process failed\n");
-	}
-	if (p_id1 == 0)
-	{
+	} */
 		close(input->fd_pipe[0]);
 		if (dup2(input->first_fd, 0) == -1)
 			ft_error(input);
@@ -47,35 +42,23 @@ void	ft_child1_process(t_pipex *input, char **argv)
 		}
 		else
 			ft_cmd_error(input->cmd1_arg, input);
-	}
 }
 
 void	ft_child2_process(t_pipex *input, char **argv)
 {
-	int	p_id2;
-
-	p_id2 = fork();
-	if (p_id2 == -1)
+	if (dup2(input->second_fd, 1) == -1)
+		ft_error(input);
+	close(input->fd_pipe[1]);
+	if (dup2(input->fd_pipe[0], 0) == -1)
+		ft_error(input);
+	input->cmd2_arg = ft_split(argv[3], ' ');
+	if (input->cmd2_arg[0] && ft_check_one_path(input, 2))
 	{
-		free(input);
-		perror("ERROR : Forking child process failed\n");
+		execve(ft_check_one_path(input, 2), input->cmd2_arg, input->env);
+		ft_free(input->cmd2_arg);
 	}
-	if (p_id2 == 0)
-	{
-		if (dup2(input->second_fd, 1) == -1)
-			ft_error(input);
-		close(input->fd_pipe[1]);
-		if (dup2(input->fd_pipe[0], 0) == -1)
-			ft_error(input);
-		input->cmd2_arg = ft_split(argv[3], ' ');
-		if (input->cmd2_arg[0] && ft_check_one_path(input, 2))
-		{
-			execve(ft_check_one_path(input, 2), input->cmd2_arg, input->env);
-			ft_free(input->cmd2_arg);
-		}
-		else
-			ft_cmd_error(input->cmd2_arg, input);
-	}
+	else
+		ft_cmd_error(input->cmd2_arg, input);
 }
 
 void	ft_close_fds(t_pipex *input)
@@ -91,19 +74,20 @@ int	main(int argc, char **argv, char **envp)
 	input = (t_pipex *)malloc(sizeof(t_pipex));
 	if (argc != 5)
 		ft_input_error(input);
-	else
-	{
-		if (pipe(input->fd_pipe) == -1)
-			ft_error(input);
-		ft_init_struct(input, argv, envp);
+	if (pipe(input->fd_pipe) == -1)
+		ft_error(input);
+	ft_init_struct(input, argv, envp);
+	input->pid_1 = fork();
+	if (input->pid_1 == 0)
 		ft_child1_process(input, argv);
+	input->pid_2 = fork();
+	if (input->pid_2 == 0)
 		ft_child2_process(input, argv);
-		close(input->fd_pipe[0]);
-		close(input->fd_pipe[1]);
-		waitpid(-1, &input->first_fd, 0);
-		waitpid(-1, &input->second_fd, 0);
-		ft_close_fds(input);
-		free(input);
-		return (0);
-	}
+	close(input->fd_pipe[0]);
+	close(input->fd_pipe[1]);
+	waitpid(-1, &input->first_fd, 0);
+	waitpid(-1, &input->second_fd, 0);
+	ft_close_fds(input);
+	free(input);
+	return (0);
 }
