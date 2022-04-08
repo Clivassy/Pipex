@@ -24,33 +24,30 @@ void	ft_init_struct(t_pipex *input, char **argv, char **envp)
 
 void	ft_child1_process(t_pipex *input, char **argv)
 {
-/* 	if (p_id1 == -1)
+	close(input->fd_pipe[0]);
+	if (dup2(input->first_fd, 0) == -1)
+		ft_error(input);
+	if (dup2(input->fd_pipe[1], 1) == -1)
+		ft_error(input);
+	close(input->first_fd);
+	input->cmd1_arg = ft_split(argv[2], ' ');
+	if (input->cmd1_arg[0] && ft_check_one_path(input, 1))
 	{
-		free(input);
-		perror("ERROR : Forking child process failed\n");
-	} */
-		close(input->fd_pipe[0]);
-		if (dup2(input->first_fd, 0) == -1)
-			ft_error(input);
-		if (dup2(input->fd_pipe[1], 1) == -1)
-			ft_error(input);
-		input->cmd1_arg = ft_split(argv[2], ' ');
-		if (input->cmd1_arg[0] && ft_check_one_path(input, 1))
-		{
-			execve(ft_check_one_path(input, 1), input->cmd1_arg, input->env);
-			ft_free(input->cmd1_arg);
-		}
-		else
-			ft_cmd_error(input->cmd1_arg, input);
+		execve(ft_check_one_path(input, 1), input->cmd1_arg, input->env);
+		ft_free(input->cmd1_arg);
+	}
+	else
+		ft_cmd_error(input->cmd1_arg, input);
 }
 
 void	ft_child2_process(t_pipex *input, char **argv)
 {
-	if (dup2(input->second_fd, 1) == -1)
-		ft_error(input);
 	close(input->fd_pipe[1]);
 	if (dup2(input->fd_pipe[0], 0) == -1)
 		ft_error(input);
+	if (dup2(input->second_fd, 1) == -1)
+		ft_error(input);
+	close(input->second_fd);
 	input->cmd2_arg = ft_split(argv[3], ' ');
 	if (input->cmd2_arg[0] && ft_check_one_path(input, 2))
 	{
