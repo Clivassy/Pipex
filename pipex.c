@@ -78,11 +78,17 @@ void	ft_child2_process(t_pipex *input, char **argv)
 	}
 }
 
+void	ft_close_fds(t_pipex *input)
+{
+	close(input->first_fd);
+	close(input->second_fd);
+}
+
 int	main(int argc, char **argv, char **envp)
 {
 	t_pipex	*input;
 
-	input = (t_pipex *)malloc(sizeof(t_pipex));
+	input = malloc(sizeof(t_pipex*));
 	if (argc != 5)
 		ft_input_error(input);
 	else
@@ -96,8 +102,7 @@ int	main(int argc, char **argv, char **envp)
 		close(input->fd_pipe[1]);
 		waitpid(-1, &input->first_fd, 0);
 		waitpid(-1, &input->second_fd, 0);
-		close(input->first_fd);
-		close(input->second_fd);
+		ft_close_fds(input);
 		free(input);
 		return (0);
 	}
