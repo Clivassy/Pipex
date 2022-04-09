@@ -20,9 +20,9 @@ void	ft_init_struct(t_pipex *input, char **argv, char **envp)
 		exit(EXIT_FAILURE);
 	}
 	input->first_fd = open(argv[1], O_RDONLY);
+	input->second_fd = open(argv[4], O_WRONLY | O_TRUNC | O_CREAT, 0644);
 	if (input->first_fd == -1)
 		ft_fd_error(argv[1], strerror(errno), input);
-	input->second_fd = open(argv[4], O_WRONLY | O_TRUNC | O_CREAT, 0644);
 	if (input->second_fd == -1)
 		ft_fd_error(argv[4], strerror(errno), input);
 	input->env = envp;
@@ -65,7 +65,7 @@ void	ft_child2_process(t_pipex *input, char **argv)
 int	main(int argc, char **argv, char **envp)
 {
 	t_pipex	*input;
-	
+
 	input = (t_pipex *)malloc(sizeof(t_pipex));
 	if (argc != 5)
 		ft_input_error(input);

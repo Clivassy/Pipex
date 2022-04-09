@@ -55,7 +55,7 @@ void	ft_error(t_pipex *input);
 void	ft_input_error(t_pipex *input);
 
 /* utils*/
-void ft_close_pipes(t_pipex *input);
+void	ft_close_pipes(t_pipex *input);
 void	ft_close_fds(t_pipex *input);
 void	ft_putendl_fd(char *s, int fd);
 void	ft_putstr_fd(char *s, int fd);

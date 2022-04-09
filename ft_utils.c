@@ -17,7 +17,7 @@ void	ft_close_fds(t_pipex *input)
 	close(input->second_fd);
 }
 
-void ft_close_pipes(t_pipex *input)
+void	ft_close_pipes(t_pipex *input)
 {
 	close(input->fd_pipe[0]);
 	close(input->fd_pipe[1]);
