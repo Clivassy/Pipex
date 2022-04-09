@@ -13,6 +13,7 @@
 #ifndef PIPEX_H
 # define PIPEX_H
 
+# include "./ft_printf/libftprintf.h"
 # include <time.h>
 # include <stdio.h>
 # include <fcntl.h>
@@ -49,11 +50,14 @@ size_t	ft_strlen(const char *s);
 
 /*Errors*/
 void	ft_cmd_error(char **cmd, t_pipex *input);
+void	ft_fd_error(char *file, char *error, t_pipex *input);
 void	ft_error(t_pipex *input);
 void	ft_input_error(t_pipex *input);
 
 /* utils*/
 void ft_close_pipes(t_pipex *input);
 void	ft_close_fds(t_pipex *input);
+void	ft_putendl_fd(char *s, int fd);
+void	ft_putstr_fd(char *s, int fd);
 
 #endif

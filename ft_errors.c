@@ -11,10 +11,18 @@
 /* ************************************************************************** */
 #include "pipex.h"
 
+/* Fd error */
+void	ft_fd_error(char *file, char *error, t_pipex *input)
+{
+	ft_printf("zsh: %s: %s\n", error, file);
+	free(input);
+	exit(EXIT_FAILURE);
+}
+
 /* Input error*/
 void	ft_input_error(t_pipex *input)
 {
-	write(2, "Error Input\n./pipex [file1][cmd1][cmd2][file2]", 47);
+	ft_printf("Wrong Input\nEx: ./pipex [file1][cmd1][cmd2][file2]\n");
 	free(input);
 	exit(EXIT_FAILURE);
 }

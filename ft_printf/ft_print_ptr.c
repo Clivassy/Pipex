@@ -1,27 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_putstr_fd.c                                     :+:      :+:    :+:   */
+/*   ft_print_ptr.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jbatoro <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/12/01 20:20:25 by jbatoro           #+#    #+#             */
-/*   Updated: 2021/12/02 14:42:28 by jbatoro          ###   ########.fr       */
+/*   Created: 2021/12/19 17:41:52 by jbatoro           #+#    #+#             */
+/*   Updated: 2022/01/09 13:25:37 by jbatoro          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+#include "libftprintf.h"
 
-#include "libft.h"
-
-void	ft_putstr_fd(char *s, int fd)
+void	ft_is_pointer(unsigned long long ptr, int *count)
 {
-	int		i;
+	char	base[16];
 
-	i = 0;
-	if (!s)
-		return ;
-	while (s[i])
-	{
-		write (fd, &s[i], 1);
-		i++;
-	}
+	ft_strncpy(base, "0123456789abcdef", sizeof(base));
+	if (ptr > 15)
+		ft_is_pointer(ptr / 16, count);
+	ft_putchar(base[ptr % 16], count);
 }
