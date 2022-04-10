@@ -17,8 +17,16 @@ void	ft_get_paths(t_pipex *input)
 	int	i;
 
 	i = 0;
-	while (!ft_strnstr(input->env[i], "PATH", 4))
+	if (!input->env[0])
+	{
+		input->env[0] = PATH;
+		input->env[1] = NULL;
+	}
+	else
+	{
+		while (!ft_strnstr(input->env[i], "PATH", 4))
 		i++;
+	}
 	input->paths = ft_split(input->env[i] + 5, ':');
 }
 

@@ -12,7 +12,7 @@ RM = rm -rf
 all: ${NAME} pipex.h
 ${NAME}: ${OBJS}
 	@${MAKE} -C ./ft_printf
-	@${CC} ${CFLAGS} ${OBJS} ./ft_printf/libftprintf.a -o pipex
+	@${CC} ${CFLAGS} ${OBJS} ./ft_printf/ft_printf -o pipex
 
 clean:
 	@${MAKE} -C ./ft_printf fclean

@@ -4,29 +4,24 @@ OBJS	= ${SRCS:.c=.o}
 
 CC	= gcc
 
-NAME	= libftprintf.a
+NAME	= ft_printf
 
-CFLAGS	= -Wall -Werror -Wextra -g3 
+CFLAGS	= -Wall -Werror -Wextra
 
 RM	= rm -f
 
 %.o : 	%.c
-	@echo "\033[0;31mCompiling..."
-	@${CC} -o $@ -c $< ${CFLAGS}
+	${CC} -o $@ -c $< ${CFLAGS}
 	
 all : ${NAME}
 
-$(NAME) : ${OBJS} libftprintf.h
-	@echo "\033[0;33mLinking..."
+$(NAME) : ${OBJS} ft_printf.h
 	@ar rcs ${NAME} ${OBJS}
-	@echo "\033[0;32mOK!"
 
 clean :
-	@echo "\033[0;33mCleaning..."
 	@${RM} ${OBJS} ${OBJS_B}
-	@echo "\033[0;32mOK CLEAN!"
 
 fclean : clean
-	${RM} ${NAME}
+	@${RM} ${NAME}
 
 re : fclean all

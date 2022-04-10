@@ -13,19 +13,13 @@
 
 void	ft_init_struct(t_pipex *input, char **argv, char **envp)
 {	
-	if (!envp[0])
-	{
-		ft_printf("Command not found : Missing environment\n");
-		free(input);
-		exit(EXIT_FAILURE);
-	}
+	input->env = envp;
 	input->first_fd = open(argv[1], O_RDONLY);
 	input->second_fd = open(argv[4], O_WRONLY | O_TRUNC | O_CREAT, 0644);
 	if (input->first_fd == -1)
 		ft_fd_error(argv[1], strerror(errno), input);
 	if (input->second_fd == -1)
 		ft_fd_error(argv[4], strerror(errno), input);
-	input->env = envp;
 }
 
 void	ft_child1_process(t_pipex *input, char **argv)

@@ -13,6 +13,12 @@
 #ifndef PIPEX_H
 # define PIPEX_H
 
+# ifndef PATH
+#  define PATH "PATH=/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin: \
+				/usr/bin:/bin:/usr/sbin:/sbin:/opt/X11/bin: \
+				/Library/Apple/usr/bin:/opt/homebrew/bin:/opt/homebrew/sbin"
+# endif
+
 # include "./ft_printf/libftprintf.h"
 # include <time.h>
 # include <stdio.h>
