@@ -14,7 +14,8 @@
 /* Fd error */
 void	ft_fd_error(char *file, char *error, t_pipex *input)
 {
-	ft_printf("Error: %s: %s\n", error, file);
+	ft_printf("Error: %s", error);
+	ft_printf(": %s", file);
 	free(input);
 	exit(EXIT_FAILURE);
 }
