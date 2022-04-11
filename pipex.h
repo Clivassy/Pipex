@@ -14,9 +14,8 @@
 # define PIPEX_H
 
 # ifndef PATH
-#  define PATH "PATH=/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin: \
-				/usr/bin:/bin:/usr/sbin:/sbin:/opt/X11/bin: \
-				/Library/Apple/usr/bin:/opt/homebrew/bin:/opt/homebrew/sbin"
+#  define PATH "PATH=/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin: \
+				/usr/local/go/bin:/usr/local/munki"
 # endif
 
 # include "./ft_printf/libftprintf.h"
